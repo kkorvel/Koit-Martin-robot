@@ -90,13 +90,45 @@ def battery():
             #r means read the values 
     with open("/sys/class/gpio/gpio203/value", "r") as fh:
         stats["enemy_left"] = int(fh.read())
+        if stats['enemy_left'] == 1:
+            reds_on()
+        else:
+            reds_off()
     with open("/sys/class/gpio/gpio193/value", "r") as fh:
         stats["line_left"] = int(fh.read())
     with open("/sys/class/gpio/gpio194/value", "r") as fh:
         stats["line_right"] = int(fh.read())
     with open("/sys/class/gpio/gpio200/value", "r") as fh:
         stats["enemy_right"] = int(fh.read())
+        if stats['enemy_right'] == 1:
+            blues_on()
+        else:
+            blues_off()
+
+        
     return json.dumps(stats)
+
+def reds_on():
+    strip.on(198)
+    strip.on(195)
+    strip.on(194)
+    strip.on(196)
+def reds_off():
+    strip.off(198)
+    strip.off(195)
+    strip.off(194)
+    strip.off(196)
+
+def blues_on():
+    strip.on(197)
+    strip.on(199)
+    strip.on(193)
+    strip.on(192)
+def blues_off():
+    strip.off(197)
+    strip.off(199)
+    strip.off(193)
+    strip.off(192)
 
 @app.route("/lightall")
 def lightall():
@@ -108,7 +140,7 @@ def lightall():
     strip.on(195)
     strip.on(194)
     strip.on(196)
-    sleep(10)
+    sleep(2)
     strip.off(197)
     strip.off(199)
     strip.off(193)
@@ -186,10 +218,12 @@ def lightred():
     strip.off(195)
     strip.off(194)
     strip.off(196)
-    sleep(5)
+    
+    
     return "light"
 @app.route("/blues")
 def lightblue():
+
     strip.on(197)
     strip.on(199)
     strip.on(193)
@@ -199,7 +233,8 @@ def lightblue():
     strip.off(199)
     strip.off(193)
     strip.off(192)
-    sleep(5)
+    
+    
     return "light"
 
 @app.route("/lightsequence")

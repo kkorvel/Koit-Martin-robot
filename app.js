@@ -13,24 +13,15 @@ function loadDoc() {
   xhttp.open("GET", "ajax_info.txt", true);
   xhttp.send();
 }
-function removeMobileOnclick() {
-    if(isMobile()) {
-        document.querySelector('.mobile-head-bar-left').onclick  = '';
-    }
-}
+
 
 //working with phones when the touch start and the when the touch end 
-window.addEventListener('load', removeMobileOnclick);
-$('button').bind('touchstart', function(){
-    $(this).addClass('button');
-}).bind('touchend', function(){
-    $(this).removeClass('button');
-});
-
 
 //calling the function of the battery status
 setInterval(function(){ 
     $.getJSON('/batterystatus', function(data) {
+
+
         $("#batterystats").text(data.power/1000000 + " Watts ");
         $("#voltage").text(data.voltage/1000000 + " Voltage ");
         $("#circleleft").toggleClass("activated", data.enemy_left == 1);
@@ -41,17 +32,6 @@ setInterval(function(){
     });
 }, 1000); 
 
-setInterval(function(){ 
-    $.getJSON('/blues', function(data) {
-        $("#blues").toggleClass("activated", data.enemy_right == 1);
-    });
-}, 1000); 
-
-setInterval(function(){ 
-    $.getJSON('/reds', function(data) {
-        $("#reds").toggleClass("activated", data.enemy_left == 1);
-    });
-}, 1000);
     
 //disable the text selection
 $.fn.extend({
@@ -100,12 +80,23 @@ $("html").keyup(function(e) {
 });
 
 //calling the network interfaces
-window.networkUpdates = setInterval(function(){ 
-    $.getJSON('/api/wireless', function(data) {
+$(document).ready(function() {
+  console.info("Page is ready");
+  $("#network-refresh").on("click", function(event) { 
+        console.info("Refresh pressed");
+        $.getJSON('/api/wireless', function(data) {
         $("#networks").empty();
-        $.each(data, function(i, e) {
-        //console.info("appending:", e); View the networks interfaces in the console
-        $("#networks").append("<option>" + e.ssid + "</option>");
+        $.each(data.networks, function(i, e) {
+        $("#networks").append("<option>" + e + "</option>");
         });
     });
-}, 3000); 
+  });
+});
+
+
+socket = function(event){
+	$.getJSON('/blues', function(data) {
+        $("#blues").toggleClass("activated", data.enemy_right == 1);
+            return;
+            });
+};

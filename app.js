@@ -40,6 +40,18 @@ setInterval(function(){
         // variable 'data' does not exist after this
     });
 }, 1000); 
+
+setInterval(function(){ 
+    $.getJSON('/blues', function(data) {
+        $("#blues").toggleClass("activated", data.enemy_right == 1);
+    });
+}, 1000); 
+
+setInterval(function(){ 
+    $.getJSON('/reds', function(data) {
+        $("#reds").toggleClass("activated", data.enemy_left == 1);
+    });
+}, 1000);
     
 //disable the text selection
 $.fn.extend({

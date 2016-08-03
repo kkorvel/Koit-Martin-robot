@@ -69,6 +69,7 @@ class LightStrip(Thread):
         with open("/sys/class/gpio/gpio%d/value" % pin, "w") as fh:
             fh.write("1")
 
+
 strip = LightStrip()
 
 
@@ -78,6 +79,24 @@ right = MotorThread(config.getint('pins', 'motor right'))
 right.start()
 
 app = Flask(__name__ )
+
+@app.route("/batterystatus")
+def battery():
+    stats = {}
+    #open the file battery to get the information about the battery
+    for filename in os.listdir("/sys/power/axp_pmu/battery/"):
+        with open ("/sys/power/axp_pmu/battery/" + filename) as fh:
+            stats[filename] = int(fh.read())
+            #r means read the values 
+    with open("/sys/class/gpio/gpio203/value", "r") as fh:
+        stats["enemy_left"] = int(fh.read())
+    with open("/sys/class/gpio/gpio193/value", "r") as fh:
+        stats["line_left"] = int(fh.read())
+    with open("/sys/class/gpio/gpio194/value", "r") as fh:
+        stats["line_right"] = int(fh.read())
+    with open("/sys/class/gpio/gpio200/value", "r") as fh:
+        stats["enemy_right"] = int(fh.read())
+    return json.dumps(stats)
 
 @app.route("/lightall")
 def lightall():
@@ -154,7 +173,35 @@ def light8():
     strip.on(196)
     sleep(1)
     strip.off(196)
-    return "light"   
+    return "light"  
+
+@app.route("/reds")
+def lightred():
+    strip.on(198)
+    strip.on(195)
+    strip.on(194)
+    strip.on(196)
+    sleep(5)
+    strip.off(198)
+    strip.off(195)
+    strip.off(194)
+    strip.off(196)
+    sleep(5)
+    return "light"
+@app.route("/blues")
+def lightblue():
+    strip.on(197)
+    strip.on(199)
+    strip.on(193)
+    strip.on(192)
+    sleep(5)
+    strip.off(197)
+    strip.off(199)
+    strip.off(193)
+    strip.off(192)
+    sleep(5)
+    return "light"
+
 @app.route("/lightsequence")
 def lightsequence():
     strip.on(196)
@@ -1021,23 +1068,7 @@ def wireless():
     #for perm, val in sorted(NetworkManager.NetworkManager.GetPermissions().items()):
         return json.dumps(networks)
 
-@app.route("/batterystatus")
-def battery():
-    stats = {}
-    #open the file battery to get the information about the battery
-    for filename in os.listdir("/sys/power/axp_pmu/battery/"):
-        with open ("/sys/power/axp_pmu/battery/" + filename) as fh:
-            stats[filename] = int(fh.read())
-            #r means read the values 
-    with open("/sys/class/gpio/gpio192/value", "r") as fh:
-        stats["enemy_left"] = int(fh.read())
-    with open("/sys/class/gpio/gpio193/value", "r") as fh:
-        stats["line_left"] = int(fh.read())
-    with open("/sys/class/gpio/gpio194/value", "r") as fh:
-        stats["line_right"] = int(fh.read())
-    with open("/sys/class/gpio/gpio195/value", "r") as fh:
-        stats["enemy_right"] = int(fh.read())
-    return json.dumps(stats)
+
 
 @app.route("/css.css")
 def css():

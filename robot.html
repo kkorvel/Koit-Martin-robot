@@ -1,0 +1,50 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+  <!-- disable page zooming on phones -->
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, width =640">
+  <!--when you want to requst the file from the internet use this>
+  <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script-->
+  <script src ="/static/jquery-1.12.3.min.js"></script>
+    <meta charset="utf-8"/>
+    <script type="text/javascript" src="/app.js"></script>
+    <link type="text/css" rel="stylesheet" href="css.css"/>
+    <title>Robot Controls</title>
+    </head>
+  <body>
+    <div>
+    <!--form id="network-selector"-->
+        <select id="networks" onChange="$.post('/api/wireless?id=5');">
+  <fieldset>
+    <input type="button" value="Turn on all" onClick="$.get('/lightall');">
+    <input type="button" value="Turn on 1" onClick="$.get('/light1');">
+    <input type="button" value="Turn on 2" onClick="$.get('/light2');">
+    <input type="button" value="Turn on 3" onClick="$.get('/light3');">
+    <input type="button" value="Turn on 4" onClick="$.get('/light4');">
+    <input type="button" value="Turn on 5" onClick="$.get('/light5');">
+    <input type="button" value="Turn on 6" onClick="$.get('/light6');">
+    <input type="button" value="Turn on 7" onClick="$.get('/light7');">
+    <input type="button" value="Turn on 8" onClick="$.get('/light8');">
+    <input type="button" value="Turn on light magic sequence" onClick="$.get('/lightsequence');">
+
+      </fieldset>
+    </form>
+    </select>
+	<div id="button-background">
+	    <div id="button">
+	    <svg id = "circleleft" height="100" width="100">
+        <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3"/>
+                    </svg>
+            <svg id = "circleright" height="100" width="100">
+            <circle cx="50" cy="50" r="40" stroke="black" stroke-width="3"/>
+            </svg>
+            <button id="left" ontouchstart = "$.get('/left');" ontouchend = "$.get('/stop');">Go Left</button>
+	        <button id ="right" ontouchstart = "$.get('/right');" ontouchend = "$.get('/stop');">Go Right</button> 
+	        <button id = "go" ontouchstart = "$.get('/go');" ontouchend ="$.get('/stop');">GO</button> 
+	        <button id ="back" ontouchstart = "$.get('/back');" ontouchend ="$.get('/stop');">Back</button>
+        </div>
+            <div>
+            <div id="battery">
+            <div id="charge">
+            <div id = "capacity"></div>
+       
